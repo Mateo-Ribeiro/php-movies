@@ -14,15 +14,29 @@ if (isset($_POST["new_movie"])) {
 	}
 
 	try {
+		$new_movie->set_genre($_POST["genre"]);
+	} catch (\Exception $e) {
+		$error["genre"] = $e;
+	}
+
+	try {
 		$new_movie->set_type($_POST["type"]);
 	} catch (\Exception $e) {
 		$error["type"] = $e;
 	}
 
 	try {
-		$new_movie->set_rating($_POST["rating"]);
+		if ($_POST["rating"] == "null") {
+			$new_movie->set_rating(null);
+		} else {
+			$new_movie->set_rating($_POST["rating"]);
+		}
 	} catch (\Exception $e) {
 		$error["rating"] = $e;
+	}
+
+	if (!$error) {
+		$new_movie->register();
 	}
 }
 

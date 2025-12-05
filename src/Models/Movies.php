@@ -26,6 +26,18 @@ class Movies extends Database
 		$this->title = htmlspecialchars($new_title);
 	}
 
+	public function get_genre()
+	{
+		return $this->genre;
+	}
+
+	public function set_genre($new_genre)
+	{
+		if ($new_genre == "" or $new_genre == null) throw (new Exception("the title should not be empty"));
+		if (strlen($new_genre) > 100) throw (new Exception("the genre is too long (100 character max)"));
+		$this->genre = htmlspecialchars($new_genre);
+	}
+
 	public function get_type()
 	{
 		return $this->type;
@@ -53,5 +65,11 @@ class Movies extends Database
 		$query = $this->db->prepare("SELECT * FROM `movies` ORDER BY `created_at`;");
 		$query->execute();
 		return $query->fetchAll();
+	}
+
+	public function register()
+	{
+		$query = $this->db->prepare("INSERT INTO `movies`(`title`, `type`, `genre`, `rating`) VALUES (:title,:type,:genre,:rating)");
+		$query->execute(array(":title" => $this->title, ":type" => $this->type, ":genre" => $this->genre, ":rating" => $this->rating));
 	}
 }
